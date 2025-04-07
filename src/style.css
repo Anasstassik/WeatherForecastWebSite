@@ -1,0 +1,120 @@
+* {
+    margin: 0;
+    font-family: "Josefin Sans", sans-serif;
+}
+
+/* nav */
+.nav-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 85px;
+    padding: 0 5%;
+    background-color: #0d142a;
+}
+
+.nav-wrapper h1{
+    color: #fff;
+}
+
+.search-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 25%;
+}
+
+.search-input {
+    width: 100%;
+    height: 38px;
+    padding: 0 50px;
+    border: none;
+    border-radius: 7px;
+    background-color: #293248;
+    color: #fff;
+    font-size: 1.2rem;
+    font-weight: 350;
+    text-align: center;
+    line-height: 38px;
+    transition: color 0.3s ease-in-out;
+}
+
+.search-input::placeholder {
+    color: #fff;
+    line-height: 38px;
+    font-weight: 350;
+    font-size: 1.3rem;
+    text-align: center;
+    letter-spacing: 0.5px;
+    transition: color 0.25s ease-in-out;
+}
+
+.search-input:focus::placeholder {
+    color: #b0b0b0b7;
+}
+
+.search-icon {
+    position: absolute;
+    pointer-events: none;
+    right: 10px;
+    height: 90%;
+    color: #fff;
+    font-size: 18px;
+}
+
+.list-wrapper {
+    height: 40px;
+    background-color: #293248;
+}
+
+/* temperature switch */
+.temperature-toggle {
+    gap: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.unit {
+    cursor: pointer;
+    color: #fff;
+    opacity: 0.6;
+    font-size: 1.2rem;
+    transition: opacity 0.3s;
+    transform: translateY(2.5px);
+}
+
+.unit.active {
+    opacity: 1;
+    font-weight: bold;
+}
+
+.toggle {
+    position: relative;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    width: 42px;
+    height: 22px;
+    border-radius: 15px;
+    background: #ccc;
+}
+
+.toggle input {
+    display: none;
+}
+
+.slider {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #fff;
+    transition: 0.3s;
+}
+
+.toggle input:checked + .slider {
+    left: 22px;
+    background: #fff;
+}

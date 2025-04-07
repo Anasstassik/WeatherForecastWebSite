@@ -1,11 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Weather</title>
+  <link rel="stylesheet" href="./src/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Raleway:ital,wght@0,100..900;1,100..900&family=Smooch+Sans:wght@100..900&display=swap"
+    rel="stylesheet">
+  <title>Weather forcast</title>
 </head>
+
 <body>
-  <script src="./src/main.js"></script>
+  <header>
+    <nav class="nav-wrapper">
+      <h1>Weather Forecast</h1>
+      <div class="search-container">
+        <input type="text" placeholder="Search city" class="search-input">
+        <img src="./public/images/search-icon.PNG" alt="Search-icon" class="search-icon">
+      </div>
+
+      <div class="temperature-toggle">
+        <span class="unit active" data-unit="C">°C</span>
+        <label class="toggle">
+        <input type="checkbox" class="temp-switch">
+          <span class="slider"></span>
+        </label>
+        <span class="unit" data-unit="F">°F</span>
+      </div>
+    </nav>
+
+    <div class="list-wrapper"></div>
+  </header>
+
+  <script type="module" src="./src/main.js"></script>
 </body>
+
 </html>

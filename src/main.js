@@ -1,3 +1,10 @@
+const tempSwitch = document.querySelector(".temp-switch");
+const units = document.querySelectorAll(".unit");
+
+tempSwitch.addEventListener("change", () => {
+    units.forEach(unit => unit.classList.toggle("active"));
+});
+
 const cityName = "London";
 
 const getCitites = async () => {
