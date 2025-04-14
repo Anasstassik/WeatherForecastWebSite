@@ -5,12 +5,11 @@ tempSwitch.addEventListener("change", () => {
     units.forEach(unit => unit.classList.toggle("active"));
 });
 
-const cityName = "London";
 
-const getCitites = async () => {
+const getCities = async (cityName) => {
     const response = await fetch(`/api/cities?q=${cityName}`);
     const cities = await response.json();
-    return cities[0];
+    return cities.slice(0, 5);
 };
 
 const getWeather = async (cityKey) => {
@@ -41,7 +40,47 @@ const getWeather = async (cityKey) => {
     return weather;
 };
 
-getCitites().then((city) => {
-    console.log(`Weather in ${city.LocalizedName}:`);
-    return getWeather(city.Key);
-});
+const cityInput = document.querySelector(".js-search-input");
+const cityList = document.querySelector(".js-city-list");
+
+function debounce(func, delay) {
+    let timeoutId;
+    return function(...args) {
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(() => {
+            func.apply(this, args);
+        }, delay);
+    };
+}
+
+const handleInput = debounce(async () => {
+    const query = cityInput.value.trim();
+    cityList.innerHTML = "";
+
+    if (query.length > 1) {
+        const cities = await getCities(query);
+
+        if (cities.length === 0) {
+            const emptyMessage = document.createElement("div");
+            emptyMessage.classList.add("empty-message");
+            emptyMessage.textContent = "No cities found";
+            cityList.appendChild(emptyMessage);
+        } else {
+            cities.forEach(city => {
+                const cityItem = document.createElement("div");
+                cityItem.classList.add("cityList");
+                cityItem.textContent = `${city.LocalizedName}, ${city.Country.LocalizedName}`;
+                cityItem.dataset.key = city.Key;
+
+                cityItem.addEventListener("click", async () => {
+                    console.log(`Weather in ${city.LocalizedName}:`);
+                    cityList.innerHTML = "";
+                    await getWeather(city.Key);
+                });
+                cityList.appendChild(cityItem);
+            });
+        }
+    }
+},400);
+
+cityInput.addEventListener("input", handleInput);
