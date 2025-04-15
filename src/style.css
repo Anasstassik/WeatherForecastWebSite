@@ -156,3 +156,66 @@
     text-align: center;
 }
 
+/* weather 5 days */
+.weather-container {
+    background-color: #293248;
+    border-radius: 15px;
+    padding: 25px;
+    margin: 30px auto;
+    width: 90%;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  }
+  
+.weather-5days {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+  
+.weather-day {
+    background-color: white;
+    border-radius: 10px;
+    padding: 15px;
+    flex: 1;
+    min-width: 150px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+  
+.weather-day:hover {
+    transform: translateY(-5px);
+}
+  
+.city-title {
+    color: white;
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 1.5rem;
+}
+  
+.weather-day h3 {
+    color: #333;
+    margin-bottom: 15px;
+    font-size: 1.2rem;
+}
+  
+.weather-day .date {
+    color: #666;
+    font-size: 1rem;
+    margin-bottom: 15px;
+}
+  
+.weather-day .temp-max {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #1a3e8c;
+    margin: 10px 0 5px 0;
+}
+
+.weather-day .temp-min {
+    font-size: 1.4rem;
+    color: #1a3e8c;
+    opacity: 0.8;
+    margin: 5px 0 10px 0;
+}

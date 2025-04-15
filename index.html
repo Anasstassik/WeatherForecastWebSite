@@ -19,7 +19,7 @@
       <h1>Weather Forecast</h1>
       <div class="search-container">
         <input type="text" placeholder="Search city" class="search-input js-search-input">
-        <img src="./public/images/search-icon.PNG" alt="Search-icon" class="search-icon">
+        <img src="./images/search-icon.PNG" alt="Search-icon" class="search-icon">
       </div>
 
       <div class="temperature-toggle">
@@ -34,6 +34,10 @@
 
     <div class="list-wrapper js-city-list"></div>
   </header>
+  <div class="weather-container" style="display: none;">
+    <h2 class="city-title"></h2>
+    <div class="weather-5days"></div>
+  </div>
 
   <script type="module" src="./src/main.js"></script>
 </body>
