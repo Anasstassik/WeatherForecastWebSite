@@ -1,49 +1,18 @@
+import { getCities, getWeather as fetchWeather } from './api.js';
+
 const tempSwitch = document.querySelector(".temp-switch");
 const units = document.querySelectorAll(".unit");
-let weather = null;
-
-tempSwitch.addEventListener("change", () => {
-    units.forEach(unit => unit.classList.toggle("active"));
-});
-
-
-const getCities = async (cityName) => {
-    try {
-        const response = await fetch(`/api/cities?q=${cityName}`);
-        const cities = await response.json();
-        return cities.slice(0, 5);
-    } catch (error) {
-        console.log('Error fetching cities :', error)
-        return [];
-    }
-};
-
-const getWeather = async (cityKey, cityName) => {
-    try {
-        const response = await fetch(`/api/weather/${cityKey}`);
-        if (!response.ok) throw new Error('Network response was not ok');
-        weather = await response.json();
-    } catch (error) {
-        console.error('Error fetching weather:', error);
-        return;
-    }
-
-    const weatherContainer = document.querySelector('.weather-container');
-    weatherContainer.style.display = 'block';
-    
-    let cityTitle = document.querySelector('.city-title');
-    if (!cityTitle) {
-        cityTitle = document.createElement('h2');
-        cityTitle.className = 'city-title';
-        weatherContainer.prepend(cityTitle);
-    }
-    cityTitle.textContent = `Weather in ${cityName}`;
-  
-    updateTemperature();
-};
-
 const cityInput = document.querySelector(".js-search-input");
 const cityList = document.querySelector(".js-city-list");
+
+let weather = null;
+let currentUnit = 'C';
+
+tempSwitch.addEventListener('change', () => {
+    units.forEach(unit => unit.classList.toggle('active'));
+    currentUnit = currentUnit === 'C' ? 'F' : 'C';
+    updateTemperature();
+});
 
 function debounce(func, delay) {
     let timeoutId;
@@ -60,36 +29,64 @@ const handleInput = debounce(async () => {
     cityList.innerHTML = "";
 
     if (query.length > 1) {
-        const cities = await getCities(query);
-
-        if (cities.length === 0) {
-            const emptyMessage = document.createElement("div");
-            emptyMessage.classList.add("empty-message");
-            emptyMessage.textContent = "No cities found";
-            cityList.appendChild(emptyMessage);
-        } else {
-            cities.forEach(city => {
-                const cityItem = document.createElement("div");
-                cityItem.classList.add("cityList");
-                cityItem.textContent = `${city.LocalizedName}, ${city.Country.LocalizedName}`;
-                cityItem.dataset.key = city.Key;
-
-                cityItem.addEventListener("click", async () => {
-                    cityList.innerHTML = "";
-                    await getWeather(city.Key, city.LocalizedName);
-                  });
-                cityList.appendChild(cityItem);
-            });
-        }
+        await fetchAndDisplayCities(query);
     } else {
-        const weatherContainer = document.querySelector('.weather-container');
-        weatherContainer.style.display = 'none';
-    }
+        hideWeatherContainer();
+    }  
 },400);
 
-cityInput.addEventListener("input", handleInput);
+//Вивід списку міст
+async function fetchAndDisplayCities(query) {
+    const cities = await getCities(query);
 
-let currentUnit = 'C';
+    if (cities.length === 0) {
+        const emptyMessage = document.createElement("div");
+        emptyMessage.classList.add("empty-message");
+        emptyMessage.textContent = "No cities found";
+        cityList.appendChild(emptyMessage);
+        return;
+    }
+
+    cities.forEach(city => {
+        const cityItem = document.createElement("div");
+        cityItem.classList.add("cityList");
+        cityItem.textContent = `${city.LocalizedName}, ${city.Country.LocalizedName}`;
+        cityItem.dataset.key = city.Key;
+
+        cityItem.addEventListener("click", () => handleCityClick(city));
+        cityList.appendChild(cityItem);
+
+    });
+    
+}
+
+//Клік по місту
+async function handleCityClick(city) {
+    cityList.innerHTML = "";
+
+    weather = await fetchWeather(city.Key);
+    if (!weather) return;
+
+    const weatherContainer = document.querySelector('.weather-container');
+    weatherContainer.style.display = 'block';
+    
+    let cityTitle = document.querySelector('.city-title');
+    if (!cityTitle) {
+        cityTitle = document.createElement('h2');
+        cityTitle.className = 'city-title';
+        weatherContainer.prepend(cityTitle);
+    }
+    cityTitle.textContent = `Weather in ${city.LocalizedName}`;
+    
+    updateTemperature();
+};
+
+function hideWeatherContainer() {
+    const weatherContainer = document.querySelector('.weather-container');
+    weatherContainer.style.display = 'none';
+}
+
+cityInput.addEventListener("input", handleInput);
 
 function updateTemperature() {
     if (!weather) return;
@@ -118,12 +115,4 @@ function updateTemperature() {
         `;
         weatherContainer.appendChild(dayElement);
     });
-}
-
-tempSwitch.addEventListener('change', () => {
-    units.forEach(unit => unit.classList.toggle('active'));
-    
-    currentUnit = currentUnit === 'C' ? 'F' : 'C';
-
-    updateTemperature();
-  });
+};
