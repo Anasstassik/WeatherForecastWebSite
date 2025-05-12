@@ -11,6 +11,11 @@ export const getCities = async (cityName) => {
     }
 };
 
+export async function getWeatherIcon(iconCode) {
+    const paddedCode = iconCode.toString().padStart(2, '0');
+    return `https://developer.accuweather.com/sites/default/files/${paddedCode}-s.png`;
+}
+
 const cacheWeather = createCacheDecorator();
 
 export const getWeather = cacheWeather(async (cityKey) => {
