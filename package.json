@@ -1,5 +1,11 @@
 {
   "name": "my-weather-app",
+  "description": "Simple weather app with Vite",
+  "authors": [
+    "Sofiia Kozachenko <kozachsofia@gmail.com>",
+    "Zhuravel Anastasiia <sherloch3k@gmail.com>"
+  ],
+  "license": "MIT",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -10,5 +16,8 @@
   },
   "devDependencies": {
     "vite": "^6.2.0"
+  },
+  "dependencies": {
+    "cache-decorator-lib": "file:cache-decorator-lib"
   }
 }
