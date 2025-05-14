@@ -27,3 +27,19 @@ export const getWeather = cacheWeather(async (cityKey) => {
         return null;
     }
 });
+
+export const get12Weather = async (cityKey) => {
+    try{
+        const response = await fetch(`/api/12weather/${cityKey}`);
+        return await response.json();
+    } catch (error) {
+        console.error('Error fetching 12weather:', error);
+        return null;
+    }
+};
+
+const cityKey = "12345";
+
+get12Weather(cityKey).then(data => {
+    console.log("Data:", data);
+});

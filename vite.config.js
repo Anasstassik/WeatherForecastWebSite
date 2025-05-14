@@ -26,6 +26,16 @@ export default defineConfig(({ mode }) => {
                             "/forecasts/v1/daily/5day/"
                         ) + `?apikey=${env.VITE_API_KEY}`,
                 },
+                "/api/12weather": {
+                    target: "http://dataservice.accuweather.com",
+                    changeOrigin: true,
+                    secure: false,
+                    rewrite: (path) =>
+                        path.replace(
+                            /^\/api\/12weather\//,
+                            "/forecasts/v1/hourly/12hour/"
+                        ) + `?apikey=${env.VITE_API_KEY}`,
+                },
             },
         },
     };
