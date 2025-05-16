@@ -37,9 +37,3 @@ export const get12Weather = async (cityKey) => {
         return null;
     }
 };
-
-const cityKey = "12345";
-
-get12Weather(cityKey).then(data => {
-    console.log("Data:", data);
-});

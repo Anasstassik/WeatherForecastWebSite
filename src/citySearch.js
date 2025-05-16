@@ -57,12 +57,17 @@ async function handleCityClick(city) {
     if (!cityTitle) {
         cityTitle = document.createElement('h2');
         cityTitle.className = 'city-title';
-        weatherContainer.prepend(cityTitle);
+        const fiveDayContainer = weatherContainer.querySelector('.weather-5days');
+        if (fiveDayContainer) {
+            weatherContainer.insertBefore(cityTitle, fiveDayContainer);
+        } else {
+            weatherContainer.prepend(cityTitle);
+        }    
     }
     cityTitle.textContent = `Weather in ${city.LocalizedName}`;
 
     if (typeof onWeatherFetchedCallback === 'function') {
-        onWeatherFetchedCallback(weather);
+        onWeatherFetchedCallback(weather, city.Key);
     }
 }
 
