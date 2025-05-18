@@ -1,6 +1,7 @@
 import { getCurrentUnit } from './temperatureUnit.js';
+import { getWeatherIcon } from './api.js'; 
 
-export function display12HourWeather(hourlyForecastsData) {
+export async function display12HourWeather(hourlyForecastsData) {
     const hourlyWeatherContainer = document.querySelector('.weather-12hours');
 
     if (!hourlyWeatherContainer) {
@@ -25,11 +26,13 @@ export function display12HourWeather(hourlyForecastsData) {
     forecastList.className = 'hourly-forecast-list';
     hourlyWeatherContainer.appendChild(forecastList);
 
-    hourlyForecastsData.forEach((hourData) => {
+    const hourElements = await Promise.all(hourlyForecastsData.map(async (hourData) => {
         const dateTimeString = hourData.DateTime;
         const iconPhrase = hourData.IconPhrase || "N/A"; 
         const weatherIcon = hourData.WeatherIcon; 
-        
+        const iconNumberString = String(weatherIcon).padStart(2, '0');
+        const iconUrl = await getWeatherIcon(iconNumberString);
+
         let temperatureApiValue = hourData.Temperature ? hourData.Temperature.Value : null;
         const temperatureApiUnit = hourData.Temperature ? hourData.Temperature.Unit : "";
 
@@ -57,16 +60,16 @@ export function display12HourWeather(hourlyForecastsData) {
               })
             : "N/A";
         
-        const iconNumberString = String(weatherIcon).padStart(2, '0'); 
-
         const hourElement = document.createElement('div');
         hourElement.className = 'weather-hour-item';
         hourElement.innerHTML = `
             <div class="hour-time">${formattedTime}</div>
-            <img src="https://developer.accuweather.com/sites/default/files/${iconNumberString}-s.png" alt="${iconPhrase}" class="hour-weather-icon" title="${iconPhrase}">
+            <img src="${iconUrl}" alt="${iconPhrase}" class="hour-weather-icon" title="${iconPhrase}">
             <div class="hour-iconphrase">${iconPhrase}</div>
             <div class="hour-temp">${displayTemp}${displayTemp !== "N/A" ? '°' + displayUnitChar : ''}</div>
         `;
-        forecastList.appendChild(hourElement);
-    });
+        return hourElement;
+    }));
+
+    hourElements.forEach((el) => forecastList.appendChild(el));
 }
