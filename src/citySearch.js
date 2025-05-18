@@ -30,6 +30,7 @@ async function fetchAndDisplayCities(query) {
         emptyMessage.classList.add("empty-message");
         emptyMessage.textContent = "No cities found";
         cityList.appendChild(emptyMessage);
+        cityList.classList.remove('hidden');
         return;
     }
 
@@ -42,16 +43,19 @@ async function fetchAndDisplayCities(query) {
         cityItem.addEventListener("click", () => handleCityClick(city));
         cityList.appendChild(cityItem);
     });
+    cityList.classList.remove('hidden');
 }
 
 async function handleCityClick(city) {
     cityList.innerHTML = "";
+    cityList.classList.add('hidden');
 
     const weather = await fetchWeather(city.Key);
     if (!weather) return;
 
     const weatherContainer = document.querySelector('.weather-container');
     weatherContainer.style.display = 'block';
+    document.querySelector('.home-page-wrapper').style.display = 'none';
 
     let cityTitle = document.querySelector('.city-title');
     if (!cityTitle) {
@@ -74,4 +78,6 @@ async function handleCityClick(city) {
 function hideWeatherContainer() {
     const weatherContainer = document.querySelector('.weather-container');
     weatherContainer.style.display = 'none';
+    document.querySelector('.home-page-wrapper').style.display = 'block';
+    cityList.classList.remove('hidden');
 }

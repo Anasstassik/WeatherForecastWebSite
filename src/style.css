@@ -1,6 +1,14 @@
 * {
     margin: 0;
+    padding: 0;
+    box-sizing: border-box;
     font-family: "Josefin Sans", sans-serif;
+}
+
+header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
 }
 
 /* nav */
@@ -156,12 +164,82 @@
     text-align: center;
 }
 
+/* home page */
+.home-page-wrapper {
+  margin: 50px auto;
+  background-color: #0d142a;
+  padding: 80px 100px;
+  border-radius: 20px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+  height: 550px;
+  max-width: 1250px;
+  width: 100%;
+  box-sizing: border-box;
+  position: relative;
+  overflow: visible;
+}
+
+.home-page-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 60px;
+  flex-wrap: nowrap;
+  position: relative;
+}
+
+.home-page-text-container {
+  flex: 1;
+  color: #fff;
+  text-shadow: 1.5px 1.5px 6px rgba(0, 0, 0, 0.8);
+  z-index: 10;
+}
+
+.home-page-text-container h1 {
+  font-size: 3rem;
+  margin-bottom: 25px;
+  font-weight: 700;
+  color: #fff;
+  text-shadow: 3px 3px 10px rgba(0, 0, 0, 0.9);
+}
+
+.home-page-text-container p {
+  font-size: 1.5rem;
+  color: #d0d0d0;
+  line-height: 1.8;
+  text-shadow: 1.5px 1.5px 5px rgba(0, 0, 0, 0.7);
+}
+
+.home-page-img-container {
+  flex: 1;
+  min-width: 350px;
+  position: relative;
+  z-index: 20;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7);
+  border-radius: 15px;
+  transform: translateX(40px) translateY(20px);
+  transition: transform 0.3s ease;
+}
+
+.home-page-img-container:hover {
+  transform: translateX(20px) translateY(10px);
+}
+
+.home-page-img-container img {
+  width: 100%;
+  max-width: 700px;
+  height: auto;
+  border-radius: 15px;
+  display: block;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.7);
+}
+
 /* weather 5 days */
 .weather-container {
-    background-color: #293248;
+    background-color: #202a47;
     border-radius: 15px;
     padding: 25px;
-    margin: 50px auto 30px auto;
+    margin: 30px auto 30px auto;
     width: 90%;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
@@ -218,13 +296,13 @@
 .weather-day .temp-max {
     font-size: 1.8rem;
     font-weight: bold;
-    color: #1a3e8c;
+    color: #354563;
     margin: 10px 0 5px 0;
 }
 
 .weather-day .temp-min {
     font-size: 1.4rem;
-    color: #1a3e8c;
+    color: #354563;
     opacity: 0.8;
     margin: 5px 0 10px 0;
 }
@@ -260,7 +338,7 @@
 }
 
 .weather-hour-item {
-    background-color: #293248; 
+    background-color: #202a47; 
     border-radius: 8px;
     padding: 15px 10зч;
     min-width: 110px;
@@ -329,4 +407,9 @@
     text-align: center;
     padding: 20px;
     width: 100%; 
+}
+
+/* utils */
+.hidden {
+    display: none !important;
 }
