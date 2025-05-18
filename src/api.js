@@ -15,10 +15,10 @@ export async function getWeatherIcon(iconCode) {
     const paddedCode = iconCode.toString().padStart(2, '0');
     return `https://developer.accuweather.com/sites/default/files/${paddedCode}-s.png`;
 }
+const fiveDayCache = createCacheDecorator();
+const twelveHourCache = createCacheDecorator();
 
-const cacheWeather = createCacheDecorator();
-
-export const getWeather = cacheWeather(async (cityKey) => {
+export const getWeather = fiveDayCache(async (cityKey) => { 
     try{
         const response = await fetch(`/api/weather/${cityKey}`);
         return await response.json();
@@ -28,7 +28,7 @@ export const getWeather = cacheWeather(async (cityKey) => {
     }
 });
 
-export const get12Weather = async (cityKey) => {
+export const get12Weather = twelveHourCache(async (cityKey) => { 
     try{
         const response = await fetch(`/api/12weather/${cityKey}`);
         return await response.json();
@@ -36,4 +36,4 @@ export const get12Weather = async (cityKey) => {
         console.error('Error fetching 12weather:', error);
         return null;
     }
-};
+});
