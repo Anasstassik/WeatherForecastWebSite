@@ -1,9 +1,11 @@
 import { getCurrentUnit } from './temperatureUnit.js';
 import { getWeatherIcon } from './api.js'; 
+import { eventBus } from './eventBus.js';
+
+const hourlyWeatherContainer = document.querySelector('.weather-12hours');
+let latestHourlyData = null;
 
 export async function display12HourWeather(hourlyForecastsData) {
-    const hourlyWeatherContainer = document.querySelector('.weather-12hours');
-
     if (!hourlyWeatherContainer) {
         console.error("Element.weather-12hours wasn't found.");
         return;
@@ -13,6 +15,8 @@ export async function display12HourWeather(hourlyForecastsData) {
         hourlyWeatherContainer.innerHTML = "<p class='empty-message-hourly'>Data about hourly forecast is absent.</p>";
         return;
     }
+
+    latestHourlyData = hourlyForecastsData; 
 
     const currentDisplayUnit = getCurrentUnit();
     hourlyWeatherContainer.innerHTML = ''; 
@@ -73,3 +77,13 @@ export async function display12HourWeather(hourlyForecastsData) {
 
     hourElements.forEach((el) => forecastList.appendChild(el));
 }
+
+eventBus.on('hourly-weather-updated', (data) => {
+    display12HourWeather(data);
+});
+
+eventBus.on('unit-changed', () => {
+    if (latestHourlyData) {
+        display12HourWeather(latestHourlyData);
+    }
+});

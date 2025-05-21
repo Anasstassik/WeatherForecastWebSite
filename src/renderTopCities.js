@@ -1,5 +1,6 @@
 import { getWeather, getWeatherIcon } from './api.js';
 import { getCurrentUnit } from './temperatureUnit.js';
+import { eventBus } from './eventBus.js';
 
 const undef_key = '294021';
 
@@ -130,3 +131,7 @@ export async function updateTopCitiesTemperature() {
         }
     }
 }
+
+eventBus.on('unit-changed', () => {
+    updateTopCitiesTemperature();
+});

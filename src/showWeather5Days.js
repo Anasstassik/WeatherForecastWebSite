@@ -1,5 +1,6 @@
 import {getWeatherIcon} from './api'
 import { getCurrentUnit } from './temperatureUnit.js';
+import { eventBus } from './eventBus.js';
 
 let weather = null;
 
@@ -43,3 +44,11 @@ export async function updateTemperatureDisplay(weatherData) {
     dayElements.forEach(dayElement => weatherContainer.appendChild(dayElement));
     document.querySelector('.weather-container').style.display = 'block';
 }
+eventBus.on('weather-updated', (data) => {
+    updateTemperatureDisplay(data);
+});
+eventBus.on('unit-changed', () => {
+    if (weather) {
+        updateTemperatureDisplay(weather);
+    }
+});
