@@ -54,7 +54,7 @@ export async function display12HourWeather(hourlyForecastsData) {
         }
 
         const formattedTime = dateTimeString
-            ? new Date(dateTimeString).toLocaleTimeString("ru-RU", {
+            ? new Date(dateTimeString).toLocaleTimeString("en-US", {
                   hour: '2-digit',
                   minute: '2-digit'
               })

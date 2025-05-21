@@ -3,6 +3,7 @@ import { updateTemperatureDisplay } from './showWeather5Days.js';
 import { initTemperatureToggle } from './temperatureUnit.js';
 import { get12Weather } from './api.js';
 import { display12HourWeather } from './showWeather12Hours.js';
+import { initTopCities, updateTopCitiesTemperature } from './renderTopCities.js';
 
 let lastWeatherData = null;
 let lastWeatherData12Hour = null;
@@ -27,4 +28,6 @@ initTemperatureToggle(() => {
     if (lastWeatherData12Hour ) {
         display12HourWeather(lastWeatherData12Hour );
     }
+    updateTopCitiesTemperature();
 });
+initTopCities(); 
