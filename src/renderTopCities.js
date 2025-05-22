@@ -1,6 +1,7 @@
 import { getWeather, getWeatherIcon } from './api.js';
 import { getCurrentUnit } from './temperatureUnit.js';
 import { eventBus } from './eventBus.js';
+import { createElement } from './domUtils.js'; 
 
 const undef_key = '294021';
 
@@ -33,37 +34,58 @@ async function createForecastDayElement(dayData, unit) {
 
     const iconUrl = await getWeatherIcon(dayData.Day.Icon);
 
-    const dayElement = document.createElement('div');
-    dayElement.className = 'top-city-forecast-day';
-    dayElement.innerHTML = `
-        <div class="top-city-forecast-date">${date.toLocaleDateString("en-GB", { weekday: "short" })}</div>
-        <img src="${iconUrl}" alt="Weather" class="top-city-forecast-icon"/>
-        <div class="top-city-forecast-temp">
-            <span class="temp-max">${maxTemp}°</span> / <span class="temp-min">${minTemp}°${unit}</span>
-        </div>
-    `;
+    const dayElement = createElement('div', {
+        classes: 'top-city-forecast-day',
+        children: [
+            createElement('div', {
+                classes: 'top-city-forecast-date',
+                textContent: date.toLocaleDateString("en-GB", { weekday: "short" })
+            }),
+            createElement('img', {
+                classes: 'top-city-forecast-icon',
+                attributes: { src: iconUrl, alt: 'Weather' }
+            }),
+            createElement('div', {
+                classes: 'top-city-forecast-temp',
+                children: [
+                    createElement('span', { classes: 'temp-max', textContent: `${maxTemp}°` }),
+                    document.createTextNode(' / '),
+                    createElement('span', { classes: 'temp-min', textContent: `${minTemp}°${unit}` })
+                ]
+            })
+        ]
+    });
     return dayElement;
 }
 
 async function createCityCard(city) {
-    const card = document.createElement('div');
-    card.className = 'top-city-card';
+    const cityImage = createElement('img', {
+        classes: 'top-city-image',
+        attributes: { src: `/images/top-cities/${city.imageName}`, alt: city.name }
+    });
 
-    card.innerHTML = `
-        <img src="/images/top-cities/${city.imageName}" alt="${city.name}" class="top-city-image">
-        <h3 class="top-city-name">${city.name}</h3>
-        <div class="top-city-weather-forecast js-forecast-container">
-            <p class="loading-text">Loading weather...</p>
-        </div>
-    `;
-    const forecastContainer = card.querySelector('.js-forecast-container');
+    const cityName = createElement('h3', {
+        classes: 'top-city-name',
+        textContent: city.name
+    });
+
+    const forecastContainer = createElement('div', {
+        classes: ['top-city-weather-forecast', 'js-forecast-container']
+    });
+
+    const card = createElement('div', {
+        classes: 'top-city-card',
+        children: [cityImage, cityName, forecastContainer]
+    });
 
     if (city.key === undef_key) {
-        forecastContainer.innerHTML = '';
         return card;
     }
 
-    forecastContainer.innerHTML = '<p class="loading-text">Loading weather...</p>';
+    forecastContainer.appendChild(
+        createElement('p', { classes: 'loading-text', textContent: 'Loading weather...' })
+    );
+
 
     try {
         const weatherData = await getWeather(city.key);
@@ -71,16 +93,23 @@ async function createCityCard(city) {
         if (weatherData && weatherData.DailyForecasts && weatherData.DailyForecasts.length > 0) {
             forecastContainer.innerHTML = ''; 
             const currentUnit = getCurrentUnit();
-            const forecastElements = await Promise.all(
-                weatherData.DailyForecasts.map(day => createForecastDayElement(day, currentUnit))
+            const forecastElementsPromises = weatherData.DailyForecasts.map(day => 
+                createForecastDayElement(day, currentUnit)
             );
+            const forecastElements = await Promise.all(forecastElementsPromises);
             forecastElements.forEach(el => forecastContainer.appendChild(el));
         } else {
-            forecastContainer.innerHTML = '<p class="error-text">Weather data unavailable.</p>';
+            forecastContainer.innerHTML = '';
+            forecastContainer.appendChild(
+                createElement('p', { classes: 'error-text', textContent: 'Weather data unavailable.' })
+            );
         }
     } catch (error) {
         console.error(`Error fetching weather for ${city.name}:`, error);
-        forecastContainer.innerHTML = '<p class="error-text">Failed to load weather.</p>';
+        forecastContainer.innerHTML = ''; 
+        forecastContainer.appendChild(
+            createElement('p', { classes: 'error-text', textContent: 'Failed to load weather.' })
+        );
     }
     return card;
 }
@@ -110,7 +139,7 @@ export async function updateTopCitiesTemperature() {
         if (city.key === undef_key) {
             continue; 
         }
-        const cityCardElement = gridContainer.children[i]
+        const cityCardElement = gridContainer.children[i];
         if (!cityCardElement) continue;
 
         const forecastContainer = cityCardElement.querySelector('.js-forecast-container');
@@ -124,9 +153,10 @@ export async function updateTopCitiesTemperature() {
         const weatherData = await getWeather(city.key); 
         if (weatherData && weatherData.DailyForecasts && weatherData.DailyForecasts.length > 0) {
             forecastContainer.innerHTML = '';
-            const forecastElements = await Promise.all(
-                weatherData.DailyForecasts.map(day => createForecastDayElement(day, currentUnit))
+            const forecastElementsPromises = weatherData.DailyForecasts.map(day => 
+                createForecastDayElement(day, currentUnit)
             );
+            const forecastElements = await Promise.all(forecastElementsPromises);
             forecastElements.forEach(el => forecastContainer.appendChild(el));
         }
     }
