@@ -1,4 +1,4 @@
-import { createCacheDecorator } from '../cache-decorator-lib/src/index.js';
+import { createCacheDecorator } from '../lib/src/index.js';
 
 export const getCities = async (cityName) => {
     try {

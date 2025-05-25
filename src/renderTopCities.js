@@ -1,6 +1,6 @@
 import { getWeather, getWeatherIcon } from './api.js';
 import { getCurrentUnit } from './temperatureUnit.js';
-import { eventBus } from './eventBus.js';
+import { eventBus } from '../lib/src/index.js';
 import { createElement } from './domUtils.js'; 
 
 const undef_key = '294021';
