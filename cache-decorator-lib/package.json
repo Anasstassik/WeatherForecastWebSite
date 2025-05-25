@@ -1,8 +1,0 @@
-{
-  "name": "cache-decorator-lib",
-  "version": "1.0.0",
-  "description": "A simple async cache decorator",
-  "main": "src/index.js",
-  "type": "module",
-  "license": "MIT"
-}
