@@ -1,6 +1,6 @@
 import {getWeatherIcon} from './api'
 import { getCurrentUnit } from './temperatureUnit.js';
-import { eventBus } from './eventBus.js';
+import { eventBus } from '../lib/src/index.js';
 
 let weather = null;
 

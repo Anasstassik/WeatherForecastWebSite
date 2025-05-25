@@ -1,6 +1,6 @@
 import { getCurrentUnit } from './temperatureUnit.js';
 import { getWeatherIcon } from './api.js'; 
-import { eventBus } from './eventBus.js';
+import { eventBus } from '../lib/src/index.js';
 
 const hourlyWeatherContainer = document.querySelector('.weather-12hours');
 let latestHourlyData = null;

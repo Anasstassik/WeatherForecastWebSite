@@ -1,0 +1,12 @@
+{
+  "name": "lib",
+  "version": "1.0.0",
+  "description": "A JavaScript library with cache decorator and event bus modules",
+  "exports": {
+    "./cachedecorator": "./lib/cacheDecorator.js",
+    "./eventbus": "./lib/eventBus.js"
+  },
+  "main": "./lib/index.js",
+  "type": "module",
+  "license": "MIT"
+}

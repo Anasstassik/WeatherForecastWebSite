@@ -2,7 +2,7 @@ import { initCitySearch } from './citySearch.js';
 import { initTemperatureToggle } from './temperatureUnit.js';
 import { get12Weather } from './api.js';
 import { initTopCities} from './renderTopCities.js';
-import { eventBus } from './eventBus.js';
+import { eventBus } from '../lib/src/index.js';
 import './showWeather5Days.js';
 import './showWeather12Hours.js';
 
