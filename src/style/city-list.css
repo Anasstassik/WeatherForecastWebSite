@@ -1,0 +1,40 @@
+.list-wrapper {
+    width: 100%;
+    min-height: 40px;
+    height: auto; 
+    background-color: #293248;
+    padding: 5px;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    transition: height 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.cityList {
+    width : 21%;
+    padding: 10px;
+    background-color: #354563;
+    margin: 5px 0 5px 100px;
+    border-radius: 7px;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.cityList:hover {
+    background-color: #4c5a77;
+}
+
+.cityList:active {
+    background-color: #6a7a96;
+}
+
+.empty-message {
+    padding: 10px;
+    margin: 5px 0 5px 100px;
+    color: #d9d8d8;
+    font-style: italic;
+    text-align: center;
+}

@@ -1,3 +1,4 @@
+import './style/index.css';
 import { initCitySearch } from './citySearch.js';
 import { initTemperatureToggle } from './utils/temperatureUnit.js';
 import { get12Weather } from './api.js';
