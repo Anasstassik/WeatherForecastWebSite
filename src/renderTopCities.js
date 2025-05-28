@@ -1,24 +1,8 @@
 import { getWeather, getWeatherIcon } from './api.js';
-import { getCurrentUnit } from './temperatureUnit.js';
+import { getCurrentUnit } from './utils/temperatureUnit.js';
 import { eventBus } from '../lib/src/index.js';
 import { createElement } from './domUtils.js'; 
-
-const undef_key = '294021';
-
-const TOP_CITIES = [
-    { name: 'New York', key: '349727', imageName: 'new-york.jpg' },
-    { name: 'London', key: '328328', imageName: 'london.jpeg' },
-    { name: 'Tokyo', key: '226396', imageName: 'tokyo.jpeg' },
-    { name: 'Undefined', key: undef_key, imageName: 'moscow.jpg' },
-    { name: 'Delhi', key: '202396', imageName: 'delhi.jpg' },
-    { name: 'Sydney', key: '22889', imageName: 'sydney.jpg' },
-    { name: 'Istanbul', key: '318251', imageName: 'istanbul.jpg' },
-    { name: 'Paris', key: '623', imageName: 'paris.jpg' },
-    { name: 'Toronto', key: '55488', imageName: 'toronto.jpg' },
-    { name: 'São Paulo', key: '45881', imageName: 'sao-paulo.jpg' },
-    { name: 'Kyiv', key: '324505', imageName: 'kyiv.jpg' },
-    { name: 'Lviv', key: '324561', imageName: 'lviv.png' },
-];
+import { undefinedCityKey, topCitiesData } from './constants/appConstants.js';
 
 async function createForecastDayElement(dayData, unit) {
     const date = new Date(dayData.Date);
@@ -78,7 +62,7 @@ async function createCityCard(city) {
         children: [cityImage, cityName, forecastContainer]
     });
 
-    if (city.key === undef_key) {
+    if (city.key === undefinedCityKey) {
         return card;
     }
 
@@ -122,7 +106,7 @@ export async function initTopCities() {
     }
     gridContainer.innerHTML = ''; 
 
-    for (const city of TOP_CITIES) {
+    for (const city of topCitiesData) {
         const cityCardElement = await createCityCard(city);
         gridContainer.appendChild(cityCardElement);
     }
@@ -134,9 +118,9 @@ export async function updateTopCitiesTemperature() {
 
     const currentUnit = getCurrentUnit();
 
-    for (let i = 0; i < TOP_CITIES.length; i++) {
-        const city = TOP_CITIES[i];
-        if (city.key === undef_key) {
+    for (let i = 0; i < topCitiesData.length; i++) {
+        const city = topCitiesData[i];
+        if (city.key === undefinedCityKey) {
             continue; 
         }
         const cityCardElement = gridContainer.children[i];

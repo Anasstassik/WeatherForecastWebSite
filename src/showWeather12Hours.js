@@ -1,4 +1,4 @@
-import { getCurrentUnit } from './temperatureUnit.js';
+import { getCurrentUnit } from './utils/temperatureUnit.js';
 import { getWeatherIcon } from './api.js'; 
 import { eventBus } from '../lib/src/index.js';
 
@@ -52,9 +52,6 @@ export async function display12HourWeather(hourlyForecastsData) {
             } else {
                 displayTemp = temperatureApiValue; 
             }
-        } else {
-            displayTemp = "N/A";
-            displayUnitChar = ""; 
         }
 
         const formattedTime = dateTimeString

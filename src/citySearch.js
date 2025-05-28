@@ -1,5 +1,5 @@
 import { getCities, getWeather as fetchWeather } from './api.js';
-import { debounce } from './utils.js';
+import { debounce} from './utils/debounce.js'
 
 const cityInput = document.querySelector(".js-search-input");
 const cityList = document.querySelector(".js-city-list");
