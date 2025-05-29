@@ -1,40 +1,30 @@
-import { getWeather, getWeatherIcon } from './api.js';
-import { getCurrentUnit } from './utils/temperatureUnit.js';
-import { eventBus } from '../lib/src/index.js';
-import { createElement } from './domUtils.js'; 
-import { undefinedCityKey, topCitiesData } from './constants/appConstants.js';
+import { getWeather } from '../api.js';
+import { getCurrentUnit } from '../utils/temperatureUnit.js';
+import { eventBus } from '../../lib/src/index.js';
+import { createElement } from '../utils/domUtils.js'; 
+import { undefinedCityKey, topCitiesData } from '../constants/appConstants.js';
+import { processDailyForecastItem } from '../utils/weatherUtils.js';
 
-async function createForecastDayElement(dayData, unit) {
-    const date = new Date(dayData.Date);
-    let minTemp, maxTemp;
-
-    if (unit === 'C') {
-        minTemp = Math.round(((dayData.Temperature.Minimum.Value - 32) * 5) / 9);
-        maxTemp = Math.round(((dayData.Temperature.Maximum.Value - 32) * 5) / 9);
-    } else {
-        minTemp = Math.round(dayData.Temperature.Minimum.Value);
-        maxTemp = Math.round(dayData.Temperature.Maximum.Value);
-    }
-
-    const iconUrl = await getWeatherIcon(dayData.Day.Icon);
+async function createForecastDayElement(rawDayData, displayUnit) {
+    const processedDay = await processDailyForecastItem(rawDayData, displayUnit);
 
     const dayElement = createElement('div', {
         classes: 'top-city-forecast-day',
         children: [
-            createElement('div', {
+            createElement('div', { 
                 classes: 'top-city-forecast-date',
-                textContent: date.toLocaleDateString("en-GB", { weekday: "short" })
+                textContent: processedDay.dayShort 
             }),
             createElement('img', {
                 classes: 'top-city-forecast-icon',
-                attributes: { src: iconUrl, alt: 'Weather' }
+                attributes: { src: processedDay.iconUrl, alt: 'Weather' }
             }),
             createElement('div', {
                 classes: 'top-city-forecast-temp',
                 children: [
-                    createElement('span', { classes: 'temp-max', textContent: `${maxTemp}°` }),
+                    createElement('span', { classes: 'temp-max', textContent: `${processedDay.maxTemp}°` }),
                     document.createTextNode(' / '),
-                    createElement('span', { classes: 'temp-min', textContent: `${minTemp}°${unit}` })
+                    createElement('span', { classes: 'temp-min', textContent: `${processedDay.minTemp}°${processedDay.displayUnit}` })
                 ]
             })
         ]

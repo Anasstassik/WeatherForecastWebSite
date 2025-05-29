@@ -2,10 +2,10 @@ import './style/index.css';
 import { initCitySearch } from './citySearch.js';
 import { initTemperatureToggle } from './utils/temperatureUnit.js';
 import { get12Weather } from './api.js';
-import { initTopCities} from './renderTopCities.js';
+import { initTopCities} from './weatherDisplay/renderTopCities.js';
 import { eventBus } from '../lib/src/index.js';
-import './showWeather5Days.js';
-import './showWeather12Hours.js';
+import './weatherDisplay/showWeather5Days.js';
+import './weatherDisplay/showWeather12Hours.js';
 
 
 let lastWeatherData = null;
