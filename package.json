@@ -18,6 +18,7 @@
     "vite": "^6.2.0"
   },
   "dependencies": {
-    "lib": "file:lib"
+    "lib": "file:lib",
+    "page": "^1.11.6"
   }
 }
