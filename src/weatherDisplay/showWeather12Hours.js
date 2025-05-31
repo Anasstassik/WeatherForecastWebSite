@@ -1,6 +1,8 @@
 import { getCurrentUnit } from '../utils/temperatureUnit.js';    
 import { eventBus } from '../../lib/src/index.js';
 import { processHourlyForecastItem } from '../utils/weatherUtils.js';
+import { BiDirectionalPriorityQueue } from '../../lib/src/index.js';
+import { convertTemperature } from '../utils/weatherUtils.js';
 
 const hourlyWeatherContainer = document.querySelector('.weather-12hours');
 let latestHourlyData = null;
@@ -50,6 +52,27 @@ export async function display12HourWeather(hourlyForecastsData) {
     });
 
     const hourElements = await Promise.all(hourElementsPromises);
+    const hourQueue = new BiDirectionalPriorityQueue();
+
+    latestHourlyData.forEach((hour) => {
+        const rawTemp = hour.Temperature?.Value;
+        const sourceUnit = hour.Temperature?.Unit || 'F';
+        const convertedTemp = convertTemperature(rawTemp, sourceUnit, currentDisplayUnit);
+
+        const time = new Date(hour.DateTime).toLocaleTimeString('en-US', {
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+
+        hourQueue.enqueue({ type: 'hour', time }, convertedTemp);
+    });
+
+    if (!hourQueue.isEmpty()) {
+        const hottest = hourQueue.peek({ highest: true });
+        const coldest = hourQueue.peek({ lowest: true });
+        console.log(`The warmest hour: ${hottest.item.time}, ${hottest.priority}°${currentDisplayUnit}`);
+        console.log(`The coldest hour: ${coldest.item.time}, ${coldest.priority}°${currentDisplayUnit}`);
+    }
     hourElements.forEach((el) => forecastList.appendChild(el));
 }
 

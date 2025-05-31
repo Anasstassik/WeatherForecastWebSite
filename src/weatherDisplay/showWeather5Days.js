@@ -1,6 +1,8 @@
 import { getCurrentUnit } from '../utils/temperatureUnit.js';
 import { eventBus } from '../../lib/src/index.js';
 import { processDailyForecastItem } from '../utils/weatherUtils.js';
+import { BiDirectionalPriorityQueue } from '../../lib/src/index.js';
+import { convertTemperature } from '../utils/weatherUtils.js';
 
 let weather = null;
 
@@ -29,8 +31,23 @@ export async function updateTemperatureDisplay(weatherData) {
     });
 
     const dayElements = await Promise.all(dayElementsPromises);
-    dayElements.forEach(dayElement => weatherContainer.appendChild(dayElement));
-    document.querySelector('.weather-container').style.display = 'block';
+    const tempQueue = new BiDirectionalPriorityQueue();
+
+    weather.DailyForecasts.forEach((day) => {
+        const rawTemp = day.Temperature.Maximum?.Value;
+        const convertedTemp = convertTemperature(rawTemp, 'F', currentUnit);
+        const date = new Date(day.Date).toLocaleDateString();
+        tempQueue.enqueue({ type: 'day', date }, convertedTemp);
+    });
+
+    if (!tempQueue.isEmpty()) {
+        const hottest = tempQueue.peek({ highest: true });
+        const coldest = tempQueue.peek({ lowest: true });
+        console.log(`The warmest day: ${hottest.item.date}, ${hottest.priority}°${currentUnit}`);
+        console.log(`The coldest hour: ${coldest.item.date}, ${coldest.priority}°${currentUnit}`);
+    }
+        dayElements.forEach(dayElement => weatherContainer.appendChild(dayElement));
+        document.querySelector('.weather-container').style.display = 'block';
 }
 eventBus.on('weather-updated', (data) => {
     updateTemperatureDisplay(data);
