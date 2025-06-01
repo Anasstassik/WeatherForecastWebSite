@@ -31,6 +31,7 @@ export async function updateTemperatureDisplay(weatherData) {
     });
 
     const dayElements = await Promise.all(dayElementsPromises);
+    dayElements.forEach(el => weatherContainer.appendChild(el));
     const tempQueue = new BiDirectionalPriorityQueue();
 
     weather.DailyForecasts.forEach((day) => {
@@ -40,14 +41,22 @@ export async function updateTemperatureDisplay(weatherData) {
         tempQueue.enqueue({ type: 'day', date }, convertedTemp);
     });
 
+    function displayDailyExtremes(hottestDay, coldestDay, unit) {
+    const section = document.getElementById('daily-summary-section');
+    section.style.display = 'block';
+    section.innerHTML = `
+        <h3>The warmest day: ${hottestDay.item.date}, ${hottestDay.priority}°${unit}</h3>
+        <h3>The coldest day: ${coldestDay.item.date}, ${coldestDay.priority}°${unit}</h3>
+    `;
+    }
+
     if (!tempQueue.isEmpty()) {
         const hottest = tempQueue.peek({ highest: true });
         const coldest = tempQueue.peek({ lowest: true });
-        console.log(`The warmest day: ${hottest.item.date}, ${hottest.priority}°${currentUnit}`);
-        console.log(`The coldest hour: ${coldest.item.date}, ${coldest.priority}°${currentUnit}`);
+        displayDailyExtremes(hottest, coldest, currentUnit);
     }
-        dayElements.forEach(dayElement => weatherContainer.appendChild(dayElement));
-        document.querySelector('.weather-container').style.display = 'block';
+
+    document.querySelector('.weather-container').style.display = 'block';
 }
 eventBus.on('weather-updated', (data) => {
     updateTemperatureDisplay(data);

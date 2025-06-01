@@ -67,12 +67,21 @@ export async function display12HourWeather(hourlyForecastsData) {
         hourQueue.enqueue({ type: 'hour', time }, convertedTemp);
     });
 
+    function displayHourlyExtremes(hottestHour, coldestHour, unit) {
+    const section = document.getElementById('hourly-summary-section');
+    section.style.display = 'block';
+    section.innerHTML = `
+        <h3>The warmest time: ${hottestHour.item.time}, ${hottestHour.priority}°${unit}</h3>
+        <h3>The coldest time: ${coldestHour.item.time}, ${coldestHour.priority}°${unit}</h3>
+    `;
+    }
+
     if (!hourQueue.isEmpty()) {
         const hottest = hourQueue.peek({ highest: true });
         const coldest = hourQueue.peek({ lowest: true });
-        console.log(`The warmest hour: ${hottest.item.time}, ${hottest.priority}°${currentDisplayUnit}`);
-        console.log(`The coldest hour: ${coldest.item.time}, ${coldest.priority}°${currentDisplayUnit}`);
+        displayHourlyExtremes(hottest, coldest, currentDisplayUnit);
     }
+
     hourElements.forEach((el) => forecastList.appendChild(el));
 }
 
