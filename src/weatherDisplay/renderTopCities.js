@@ -137,5 +137,7 @@ export async function updateTopCitiesTemperature() {
 }
 
 eventBus.on('unit-changed', () => {
-    updateTopCitiesTemperature();
+    if (location.pathname === '/' || location.pathname === '/home') { 
+        updateTopCitiesTemperature();
+    }
 });

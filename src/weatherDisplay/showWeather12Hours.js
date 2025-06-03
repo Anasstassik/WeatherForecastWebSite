@@ -85,12 +85,14 @@ export async function display12HourWeather(hourlyForecastsData) {
     hourElements.forEach((el) => forecastList.appendChild(el));
 }
 
+eventBus.off('hourly-weather-updated');
 eventBus.on('hourly-weather-updated', (data) => {
     display12HourWeather(data);
 });
 
+eventBus.off('unit-changed');
 eventBus.on('unit-changed', () => {
-    if (latestHourlyData) {
+    if (location.pathname === '/weather' && latestHourlyData) {
         display12HourWeather(latestHourlyData);
     }
 });

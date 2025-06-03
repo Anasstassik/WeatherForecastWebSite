@@ -58,11 +58,15 @@ export async function updateTemperatureDisplay(weatherData) {
 
     document.querySelector('.weather-container').style.display = 'block';
 }
+
+eventBus.off('weather-updated');
 eventBus.on('weather-updated', (data) => {
     updateTemperatureDisplay(data);
 });
+
+eventBus.off('unit-changed');
 eventBus.on('unit-changed', () => {
-    if (weather) {
+    if (location.pathname === '/weather' && weather) {
         updateTemperatureDisplay(weather);
     }
 });

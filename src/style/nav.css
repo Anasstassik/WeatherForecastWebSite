@@ -55,3 +55,24 @@
     color: #fff;
     font-size: 18px;
 }
+
+/* button-back */
+.back-to-home-btn {
+  display: none;
+  margin: 20px auto;
+  padding: 14px 28px;
+  font-size: 1.2rem;
+  font-weight: 600;
+  background-color: #242b3f;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.back-to-home-btn:hover {
+  background-color: #313e5b;
+  transform: translateY(-2px);
+}

@@ -1,5 +1,6 @@
 import { getCities, getWeather as fetchWeather } from './api.js';
 import { debounce} from './utils/debounce.js'
+import page from 'page';
 
 const cityInput = document.querySelector(".js-search-input");
 const cityList = document.querySelector(".js-city-list");
@@ -17,8 +18,9 @@ const handleInput = debounce(async () => {
 
     if (query.length > 1) {
         await fetchAndDisplayCities(query);
-    } else {
-        hideWeatherContainer();
+    } else if (query.length === 0) {
+        page('/');
+        cityList.classList.add('hidden');
     }
 }, 400);
 
@@ -40,10 +42,12 @@ async function fetchAndDisplayCities(query) {
         cityItem.textContent = `${city.LocalizedName}, ${city.Country.LocalizedName}`;
         cityItem.dataset.key = city.Key;
 
-        cityItem.addEventListener("click", () => handleCityClick(city));
+        cityItem.addEventListener('click', async () => {
+            await handleCityClick(city);
+        });
         cityList.appendChild(cityItem);
     });
-    cityList.classList.remove('hidden');
+  cityList.classList.remove('hidden');
 }
 
 async function handleCityClick(city) {
@@ -53,31 +57,23 @@ async function handleCityClick(city) {
     const weather = await fetchWeather(city.Key);
     if (!weather) return;
 
-    const weatherContainer = document.querySelector('.weather-container');
-    weatherContainer.style.display = 'block';
-    document.querySelector('.home-page-wrapper').style.display = 'none';
-
     let cityTitle = document.querySelector('.city-title');
     if (!cityTitle) {
         cityTitle = document.createElement('h2');
         cityTitle.className = 'city-title';
-        const fiveDayContainer = weatherContainer.querySelector('.weather-5days');
+        const fiveDayContainer = document.querySelector('.weather-container .weather-5days');
         if (fiveDayContainer) {
-            weatherContainer.insertBefore(cityTitle, fiveDayContainer);
+            document.querySelector('.weather-container').insertBefore(cityTitle, fiveDayContainer);
         } else {
-            weatherContainer.prepend(cityTitle);
+            document.querySelector('.weather-container').prepend(cityTitle);
         }    
     }
     cityTitle.textContent = `Weather in ${city.LocalizedName}`;
 
-    if (typeof onWeatherFetchedCallback === 'function') {
-        onWeatherFetchedCallback(weather, city.Key);
-    }
-}
-
-function hideWeatherContainer() {
-    const weatherContainer = document.querySelector('.weather-container');
-    weatherContainer.style.display = 'none';
-    document.querySelector('.home-page-wrapper').style.display = 'block';
-    cityList.classList.remove('hidden');
+    page('/weather'); 
+    setTimeout(() => {
+        if (typeof onWeatherFetchedCallback === 'function') {
+            onWeatherFetchedCallback(weather, city.Key);
+        }
+    }, 0);
 }

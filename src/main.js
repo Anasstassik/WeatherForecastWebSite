@@ -6,6 +6,8 @@ import { initTopCities} from './weatherDisplay/renderTopCities.js';
 import { eventBus } from '../lib/src/index.js';
 import './weatherDisplay/showWeather5Days.js';
 import './weatherDisplay/showWeather12Hours.js';
+import { initRouting } from './navigation/router.js';
+import page from 'page';
 
 
 let lastWeatherData = null;
@@ -26,7 +28,21 @@ initCitySearch(async (weatherData, cityKey) => {
 });
 
 initTemperatureToggle(() => {
+    const allowedPaths = ['/', '/weather'];
+    if (!allowedPaths.includes(location.pathname)) return;
     eventBus.emit('unit-changed');
 });
 
 initTopCities(); 
+
+initRouting();
+
+const backToHomeBtn = document.querySelector('.back-to-home-btn');
+const cityInput = document.querySelector('.js-search-input');
+const cityList = document.querySelector('.js-city-list');
+backToHomeBtn.addEventListener('click', () => {
+    page('/');
+    cityInput.value = '';
+    cityList.innerHTML = '';
+    cityList.classList.add('hidden');
+});
